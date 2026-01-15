@@ -45,7 +45,6 @@ export default function App() {
     redrawAll();
   }
 
-
   useEffect(() => {
     const handler = () => setCanvasSize();
     handler();
