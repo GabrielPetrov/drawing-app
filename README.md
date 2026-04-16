@@ -107,24 +107,131 @@ drawing-app/
 
 ## ⚙️ Running the Project
 
-### Start cluster
+### Prerequisites
+
+- Git
+- Docker
+- Minikube
+- kubectl
+- Terraform
+- Python 3
+- Node.js
+
+---
+
+### 1. Clone repository
+
+```bash
+git clone git@github.com:GabrielPetrov/drawing-app.git
+cd drawing-app
+```
+
+---
+
+### 2. Setup pre-commit hooks
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip install pre-commit detect-secrets
+pre-commit install
+pre-commit run --all-files
+```
+
+---
+
+### 3. Start Kubernetes cluster
 
 ```bash
 minikube start --driver=docker
 kubectl get nodes
-````
+```
 
-### Deploy application
+---
+
+### 4. Provision infrastructure (Terraform)
+
+```bash
+cd terraform
+terraform init
+terraform apply
+cd ..
+```
+
+This deploys:
+
+* Argo CD
+* Monitoring stack
+* Alerting components
+
+---
+
+### 5. Build Docker images
+
+```bash
+docker build -t sova11/drawing-app-backend:test ./backend
+docker build -t sova11/drawing-app-frontend:test ./frontend
+```
+
+---
+
+### 6. Push images (optional manual test)
+
+```bash
+docker login
+docker push sova11/drawing-app-backend:test
+docker push sova11/drawing-app-frontend:test
+```
+
+---
+
+### 7. Deploy application
 
 ```bash
 kubectl apply -k k8s/overlays/prod
 kubectl get pods -n drawing
 ```
 
-### Access frontend
+---
+
+### 8. Access frontend
 
 ```bash
 minikube service frontend -n drawing --url
+```
+
+---
+
+### 9. Test backend
+
+```bash
+kubectl port-forward -n drawing svc/backend 8000:8000
+curl http://127.0.0.1:8000/health
+```
+
+---
+
+### 10. Access monitoring
+
+Prometheus:
+
+```bash
+kubectl port-forward -n monitoring svc/kps-kube-prometheus-stack-prometheus 9090:9090
+```
+
+Grafana:
+
+```bash
+kubectl port-forward -n monitoring svc/kps-grafana 3000:80
+```
+
+---
+
+### 11. Access Argo CD
+
+```bash
+kubectl port-forward svc/argocd-server -n argocd 8081:443
 ```
 
 ---
@@ -187,6 +294,7 @@ kubectl logs -n drawing deploy/backend
 
 * Prometheus rules detect failures
 * Alertmanager is deployed for alert routing
+* Slack webhook integration is configured for CI notifications
 
 > ⚠️ Note:
 > Some Kubernetes control-plane alerts may fire in Minikube due to missing metrics endpoints.
