@@ -7,7 +7,7 @@ patches:
 images:
   - name: drawing-app-backend
     newName: docker.io/sova11/drawing-app-backend
-    newTag: eda24dd
+    newTag: 5616539
   - name: drawing-app-frontend
     newName: docker.io/sova11/drawing-app-frontend
-    newTag: eda24dd
+    newTag: 5616539
