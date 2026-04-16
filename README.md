@@ -96,8 +96,8 @@ minikube service frontend -n drawing --url
 
 ## 🐳 Docker Images
 
-sova11/drawing-app-backend:`<tag>`{=html}
-sova11/drawing-app-frontend:`<tag>`{=html}
+sova11/drawing-app-backend:<tag>
+sova11/drawing-app-frontend:<tag>
 
 ------------------------------------------------------------------------
 
