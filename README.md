@@ -105,7 +105,6 @@ drawing-app/
 
 ---
 
-````md
 ## ⚙️ Running the Project
 
 ### Start cluster
