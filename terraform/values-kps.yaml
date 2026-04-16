@@ -1,0 +1,10 @@
+grafana:
+  adminPassword: "changeme"   # pragma: allowlist secret
+
+alertmanager:
+  enabled: true
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false

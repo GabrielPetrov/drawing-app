@@ -7,3 +7,7 @@ dist/
 terraform.tfstate
 terraform.tfstate.*
 .terraform/
+terraform/terraform.tfvars
+terraform/.terraform/
+*.tfstate
+*.tfstate.*
