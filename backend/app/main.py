@@ -1,13 +1,16 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
+from prometheus_fastapi_instrumentator import Instrumentator
 from sqlalchemy import select
+from sqlalchemy.orm import Session
+
 from .db import Base, engine, get_db
 from .models import Drawing
-from .schemas import DrawingCreate, DrawingOut, DrawingListItem
-from fastapi import Response
+from .schemas import DrawingCreate, DrawingListItem, DrawingOut
 
 app = FastAPI(title="Drawing API")
+
+Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
 # In our setup, frontend calls /api via same origin (Nginx proxy),
 # but enabling CORS is still useful for local dev.
@@ -19,13 +22,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.on_event("startup")
 def on_startup():
     Base.metadata.create_all(bind=engine)
 
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
 
 @app.post("/drawings", response_model=DrawingOut)
 def create_drawing(payload: DrawingCreate, db: Session = Depends(get_db)):
@@ -35,10 +41,14 @@ def create_drawing(payload: DrawingCreate, db: Session = Depends(get_db)):
     db.refresh(d)
     return d
 
+
 @app.get("/drawings", response_model=list[DrawingListItem])
 def list_drawings(db: Session = Depends(get_db)):
-    rows = db.execute(select(Drawing).order_by(Drawing.created_at.desc())).scalars().all()
+    rows = (
+        db.execute(select(Drawing).order_by(Drawing.created_at.desc())).scalars().all()
+    )
     return rows
+
 
 @app.get("/drawings/{drawing_id}", response_model=DrawingOut)
 def get_drawing(drawing_id: int, db: Session = Depends(get_db)):
@@ -46,6 +56,7 @@ def get_drawing(drawing_id: int, db: Session = Depends(get_db)):
     if not d:
         raise HTTPException(status_code=404, detail="Drawing not found")
     return d
+
 
 @app.delete("/drawings/{drawing_id}", status_code=204)
 def delete_drawing(drawing_id: int, db: Session = Depends(get_db)):

@@ -1,10 +1,13 @@
-from pydantic import BaseModel, Field
-from typing import Any, List, Optional
 from datetime import datetime
+from typing import Any, List, Optional
+
+from pydantic import BaseModel, Field
+
 
 class DrawingCreate(BaseModel):
     title: str = Field(default="Untitled", max_length=200)
     data: Any  # JSON strokes
+
 
 class DrawingOut(BaseModel):
     id: int
@@ -14,6 +17,7 @@ class DrawingOut(BaseModel):
 
     class Config:
         from_attributes = True
+
 
 class DrawingListItem(BaseModel):
     id: int
