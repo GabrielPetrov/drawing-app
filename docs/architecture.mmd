@@ -1,0 +1,35 @@
+flowchart LR
+    DEV[Developer workstation]
+    PC[pre-commit hooks]
+    GH[GitHub Repository]
+    GHA[GitHub Actions]
+    DH[Docker Hub]
+    ARGO[Argo CD]
+    SLACK[Slack]
+
+    DEV -->|git commit| PC
+    PC -->|commit allowed| DEV
+    DEV -->|git push| GH
+
+    GH -->|trigger CI| GHA
+    GHA -->|tests / build / lint| GHA
+    GHA -->|build + push images| DH
+    GHA -->|update manifests in Git| GH
+    GHA -->|CI notifications| SLACK
+
+    ARGO -->|pull desired state from Git| GH
+    ARGO -->|apply manifests| K8S[Kubernetes / Minikube]
+
+    subgraph K8S
+      FE[Frontend]
+      BE[Backend]
+      DB[(PostgreSQL)]
+      PROM[Prometheus]
+      GRAF[Grafana]
+      ALRT[Alertmanager]
+    end
+
+    FE -->|/api| BE
+    BE --> DB
+    PROM -->|scrape /metrics| BE
+    ALRT -->|alert webhook| SLACK
