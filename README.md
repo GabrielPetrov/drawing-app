@@ -94,29 +94,32 @@ See: `docs/architecture.mmd` or `docs/architecture.png`
 
 ```
 drawing-app/
-├── backend/
-├── frontend/
-├── k8s/
-├── terraform/
-├── .github/workflows/
-├── docs/
-└── README.md
+├── backend/              FastAPI backend source code, API logic, database access, tests
+├── frontend/             React frontend source code, Vite config, Nginx config
+├── k8s/                  Kubernetes manifests, base resources and overlays
+├── terraform/            Terraform configuration for Argo CD, monitoring stack and alerting
+├── .github/workflows/    GitHub Actions CI/CD pipelines
+├── docs/                 Architecture diagrams and additional documentation
+└── README.md             Project overview and usage instructions
 ```
 
 ---
 
+````md
 ## ⚙️ Running the Project
 
 ### Start cluster
 
 ```bash
 minikube start --driver=docker
-```
+kubectl get nodes
+````
 
 ### Deploy application
 
 ```bash
 kubectl apply -k k8s/overlays/prod
+kubectl get pods -n drawing
 ```
 
 ### Access frontend
@@ -186,9 +189,9 @@ kubectl logs -n drawing deploy/backend
 * Prometheus rules detect failures
 * Alertmanager is deployed for alert routing
 
-⚠️ Note:
-Some Kubernetes control-plane alerts may fire in Minikube due to missing metrics endpoints.
-This is expected in local environments and does not indicate application failure.
+> ⚠️ Note:
+> Some Kubernetes control-plane alerts may fire in Minikube due to missing metrics endpoints.
+> This is expected in local environments and does not indicate application failure.
 
 ---
 
