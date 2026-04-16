@@ -1,0 +1,13 @@
+resources:
+  - ../../base
+
+patches:
+  - path: replicas-patch.yaml
+
+images:
+  - name: drawing-app-backend
+    newName: docker.io/sova11/drawing-app-backend
+    newTag: latest
+  - name: drawing-app-frontend
+    newName: docker.io/sova11/drawing-app-frontend
+    newTag: latest

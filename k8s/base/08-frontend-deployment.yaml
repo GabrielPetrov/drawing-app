@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: sova11/drawing-app-frontend:v1
+          image: drawing-app-frontend
           imagePullPolicy: Always
           ports:
             - containerPort: 80

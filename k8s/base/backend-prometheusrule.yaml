@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: drawing-app-rules
+  namespace: monitoring
+  labels:
+    release: kps
+spec:
+  groups:
+    - name: drawing-app
+      rules:
+        - alert: BackendDown
+          expr: up{job="backend"} == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Backend is down"
+            description: "The backend metrics target has been down for more than 1 minute."

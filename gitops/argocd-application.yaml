@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: drawing-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:GabrielPetrov/drawing-app.git
+    targetRevision: main
+    path: k8s/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: drawing
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
