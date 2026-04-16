@@ -53,8 +53,7 @@ Supporting infrastructure:
 
 ## 📊 Architecture Diagram
 
-See: `docs/architecture.mmd`
-(Optional exported version: `docs/architecture.png`)
+See: `docs/architecture.mmd` or `docs/architecture.png`
 
 ---
 
