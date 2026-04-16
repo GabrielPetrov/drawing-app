@@ -7,7 +7,7 @@ patches:
 images:
   - name: drawing-app-backend
     newName: docker.io/sova11/drawing-app-backend
-    newTag: a4cc96f
+    newTag: c7e8d79
   - name: drawing-app-frontend
     newName: docker.io/sova11/drawing-app-frontend
-    newTag: a4cc96f
+    newTag: c7e8d79
